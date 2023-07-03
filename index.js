@@ -2,6 +2,7 @@ import express from "express";
 import { authorService } from "./authorService.js";
 import { bookService } from "./bookService.js";
 import { categoryService } from "./categoryService.js";
+import EventBus from "./eventBus.js";
 
 const app = express();
 const port = 5000;
@@ -86,6 +87,59 @@ app.post("/categories", (req, res) => {
   } else {
     res.status(400).send("Le nom de la catégorie est requis");
   }
+});
+//authorCreated...
+EventBus.subscriber("authorCreated", (author) => {
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(author)
+  };
+
+  fetch("http://localhost:5001/authors", options)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Auteur créé dans le microservice Author :", data);
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la création de l'auteur :", error);
+    });
+});
+
+// BookCreated
+EventBus.subscriber("BookCreated", (book) => {
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(book)
+  };
+
+  fetch("http://localhost:5002/books", options)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Livre créé dans le microservice Book :", data);
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la création du livre :", error);
+    });
+});
+
+//'CategoryCreated'
+EventBus.subscriber("CategoryCreated", (category) => {
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(category)
+  };
+
+  fetch("http://localhost:5003/categories", options)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Catégorie créée dans le microservice Category :", data);
+    })
+    .catch((error) => {
+      console.error("Erreur lors de la création de la catégorie :", error);
+    });
 });
 
 app.listen(port, () => {

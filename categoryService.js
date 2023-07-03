@@ -16,6 +16,7 @@ export const categoryService = {
       name
     };
     categories.push(newCategory);
+    EventBus.publish("CategoryCreated", newCategory);
     return newCategory;
   },
 

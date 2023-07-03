@@ -1,5 +1,6 @@
 // bookService.js
 import { books } from "./book.js";
+import  EventBus  from "./eventBus.js";
 
 export const bookService = {
   getAllBooks: () => {
@@ -7,6 +8,7 @@ export const bookService = {
   },
 
   getBookById: (id) => {
+    EventBus.publish('getAuthors','bookService')
     return books.find((book) => book.id === id);
   },
 
@@ -18,6 +20,7 @@ export const bookService = {
       categoryId
     };
     books.push(newBook);
+    EventBus.publish("BookCreated", newBook);
     return newBook;
   },
 

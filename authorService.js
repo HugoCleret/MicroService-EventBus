@@ -1,4 +1,5 @@
 import { authors } from "./author.js";
+import  EventBus  from "./eventBus.js";
 
 export const authorService = {
   getAllAuthors: () => {
@@ -15,6 +16,7 @@ export const authorService = {
       name
     };
     authors.push(newAuthor);
+    EventBus.publish("authorCreated", newAuthor);
     return newAuthor;
   },
 
